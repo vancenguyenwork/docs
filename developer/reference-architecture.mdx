@@ -1,0 +1,36 @@
+---
+title: "Kiến trúc tham chiếu"
+description: "Sáu lớp triển khai và luồng Information / Action"
+---
+
+## Sáu lớp triển khai
+
+| Lớp | Mục đích | Thành phần tiêu biểu |
+| --- | --- | --- |
+| **1. Experience** | Nơi user sử dụng Copilot | Claude, ChatGPT, Web Chat, Telegram |
+| **2. Identity & Context** | Biết user là ai và được xem / làm gì | SSO, RBAC, session, permission |
+| **3. Core Copilot** | Hiểu yêu cầu và điều phối | Intent router, retrieval, handoff |
+| **4. Domain Skill Pack** | Cấu hình nghiệp vụ theo phòng ban | AhaRace, Payment, QM, Warehouse, CS |
+| **5. Workflow & MCP Tools** | Thực hiện action có kiểm soát | state machine, approval, API, tool registry |
+| **6. Source Systems** | Nguồn dữ liệu chính thức | policy, DB, ticketing, internal services |
+
+## Hai luồng cần tách biệt
+
+```mermaid
+flowchart LR
+    U[User message] --> I{Intent}
+    I -->|Information| K[Knowledge Retrieval]
+    K --> A[Answer with source]
+    I -->|Action| V[Validate identity, permission & fields]
+    V --> W[Workflow / State Machine]
+    W --> T[MCP Tool]
+    T --> H{Need approval?}
+    H -->|Yes| O[Admin / QM / Owner]
+    H -->|No| R[Return result]
+    O --> R
+```
+
+| Luồng | Dùng khi | Yêu cầu tối thiểu |
+| --- | --- | --- |
+| **Information** | Hỏi policy, SOP, rubric, hướng dẫn | Source có version và effective date |
+| **Action** | Tạo request, tra cứu dữ liệu cá nhân, handoff | Identity, permission, workflow state, audit log |

@@ -1,0 +1,24 @@
+---
+title: "State machine rút tiền"
+description: "Trạng thái, transition và quy tắc luồng rút tiền"
+---
+
+```mermaid
+stateDiagram-v2
+    [*] --> wait_for_admin: User gửi yêu cầu
+    wait_for_admin --> accept: Admin duyệt
+    wait_for_admin --> reject: Admin từ chối
+    accept --> admin_remove: Admin xử lý quyền rút tiền
+    admin_remove --> admin_back: User báo đã rút xong
+    admin_back --> done: Admin khôi phục quyền admin
+    reject --> [*]
+    done --> [*]
+```
+
+## Quy tắc bắt buộc
+
+1. `accept` không đồng nghĩa với user đã có thể rút tiền; quyền chỉ sẵn sàng khi state chuyển sang `admin_remove`.
+2. Chỉ Admin / QM có quyền chuyển `wait_for_admin` sang `accept` hoặc `reject`.
+3. Chỉ sau `admin_remove`, user mới được hướng dẫn mở app và rút tiền.
+4. `admin_back` là request do user gửi sau khi rút xong; Admin vẫn là owner hoàn tất state `done`.
+5. Mọi state transition cần lưu actor, timestamp, request ID và lý do khi reject.

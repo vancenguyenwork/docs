@@ -1,0 +1,55 @@
+---
+title: "Knowledge, workflow & MCP Tools"
+description: "MCP tool contract và nguyên tắc thiết kế tool"
+---
+
+## Đặt dữ liệu đúng nơi
+
+| Loại dữ liệu | Nơi nên lưu | Không nên làm |
+| --- | --- | --- |
+| Policy, SOP, FAQ, guideline | Knowledge Base / vector search có metadata version | Không nhúng toàn bộ rule vào prompt |
+| Trạng thái case, quyền, approval | Workflow engine hoặc database có phân quyền | Không chỉ lưu trong chat history |
+| Dữ liệu cá nhân, kết quả, giao dịch | Source system hoặc API có RBAC | Không trả về nếu chưa kiểm tra permission |
+| Audit, metrics, tool logs | Analytics / audit store | Không bỏ qua request ID và timestamp |
+
+## MCP tool contract mẫu
+
+```yaml
+tool_name: create_withdraw_request
+description: Tạo yêu cầu rút tiền AhaRace sau khi xác minh người dùng và nhận xác nhận rõ ràng.
+
+authorization:
+  required_role:
+    - employee
+
+input_schema:
+  employee_id: string
+  driver_id: string
+  cycle_id: string
+  confirmation: boolean
+
+rules:
+  - Chỉ tạo khi confirmation = true.
+  - Một Driver ID chỉ có một yêu cầu active trong một cycle.
+  - Không yêu cầu OTP, mật khẩu hoặc thông tin ngân hàng.
+  - Tool không được approve hoặc reject yêu cầu.
+
+output_schema:
+  request_id: string
+  status: wait_for_admin
+  user_message: string
+
+audit:
+  log_user: true
+  log_tool_call: true
+  log_result: true
+```
+
+## Nguyên tắc thiết kế tool
+
+| Nên làm | Không nên làm |
+| --- | --- |
+| Tool nhỏ, rõ mục đích, schema ổn định | Một tool `query_database(sql)` cho Agent tự chạy tùy ý |
+| Có authorization và idempotency | Tạo request trùng khi user chat lại |
+| Có request ID, error code và audit | Trả về thành công / thất bại mơ hồ |
+| Tách `create`, `approve`, `reject`, `restore` | Gom toàn bộ authority vào một tool |

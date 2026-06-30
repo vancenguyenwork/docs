@@ -1,0 +1,36 @@
+---
+title: "Governance & release"
+description: "Guardrail, evaluation và release checklist"
+---
+
+## Guardrail nền tảng
+
+| Nhóm kiểm soát | Rule |
+| --- | --- |
+| **Authority** | Agent không tự duyệt, tự từ chối, tự chi tiền hoặc tự thay đổi quyền |
+| **Access control** | Chỉ user có quyền mới xem được dữ liệu cá nhân hoặc dữ liệu team |
+| **Source of truth** | Policy phải có version, owner và ngày hiệu lực |
+| **Human-in-the-loop** | Financial, compliance, exception và disciplinary case luôn cần owner |
+| **Data privacy** | Không lấy OTP, mật khẩu, dữ liệu ngân hàng; tối thiểu hóa PII |
+| **Auditability** | Tool call, action và handoff có request ID, actor và timestamp |
+
+## Evaluation trước khi release
+
+| Nhóm test | Ví dụ |
+| --- | --- |
+| Policy answer | Agent trả lời điều kiện Insight Vàng, có nguồn và không bịa |
+| Permission | User A không xem được kết quả của User B |
+| Workflow | Không thể chuyển thẳng `wait_for_admin` sang `done` |
+| Tool safety | Không tạo request nếu user chưa xác nhận |
+| Handoff | Case bị từ chối được route đúng Admin / QM owner |
+| Failure mode | Tool lỗi thì user nhận thông báo rõ và biết bước tiếp theo |
+
+## Release checklist
+
+- Owner đã duyệt phạm vi và policy source.
+- Knowledge source có version / effective date.
+- Tool contract có authorization, input validation và audit.
+- Workflow đã test happy path, reject path và retry path.
+- Evaluation set đạt ngưỡng đã thống nhất.
+- Có dashboard cho adoption, latency, tool success, handoff và error.
+- Có rollback plan và contact owner khi incident.

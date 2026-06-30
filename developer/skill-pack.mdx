@@ -1,0 +1,55 @@
+---
+title: "Skill Pack playbook"
+description: "Cấu trúc chuẩn và intake template Skill Pack"
+---
+
+## Cấu trúc chuẩn
+
+```text
+skill-pack/
+├── manifest.yaml            # Tên, owner, phạm vi, release status
+├── intents.yaml             # Intent và ví dụ câu hỏi
+├── knowledge/               # Policy, SOP, FAQ, guideline
+├── prompts/                 # Cách phản hồi theo domain
+├── tools.yaml               # MCP tool mapping và quyền gọi
+├── workflows.yaml           # State machine, approval, escalation
+├── guardrails.yaml          # Điều cấm, PII, fraud, authority
+└── evaluation/              # Test cases, expected answers, KPI
+```
+
+## Intake template cho BA / Domain owner
+
+```yaml
+domain: [payment_analytics | quality_management | warehouse | customer_service]
+skill_pack_name: [tên pack]
+owner: [tên team / owner]
+business_problem: [vấn đề đang gây lãng phí hoặc chậm xử lý]
+primary_users:
+  - [nhóm user 1]
+  - [nhóm user 2]
+key_intents:
+  - [intent 1]
+  - [intent 2]
+knowledge_sources:
+  - [policy / SOP / FAQ / data dictionary]
+actions_allowed:
+  - [tool được phép gọi]
+human_approval_required:
+  - [action bắt buộc owner duyệt]
+not_supported:
+  - [case agent không xử lý]
+success_metrics:
+  - [self-service rate]
+  - [average handling time]
+  - [handoff accuracy]
+```
+
+## Definition of Ready trước khi build
+
+- Pain point có đủ rõ và có owner chịu trách nhiệm.
+- Có top câu hỏi hoặc case lặp lại từ user thật.
+- Có policy / SOP nguồn chính thức và trạng thái hiệu lực.
+- Action được phép và action phải duyệt đã được tách rõ.
+- Có rule về dữ liệu nhạy cảm và quyền truy cập.
+- Có evaluation set tối thiểu trước khi UAT.
+- Có KPI để đo impact sau release.

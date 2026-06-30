@@ -1,0 +1,84 @@
+---
+title: "Rút tiền bằng ngôn ngữ tự nhiên"
+description: "Quy trình rút tiền AhaRace qua Copilot"
+---
+
+## Nguyên tắc đơn giản
+
+Bạn không cần dùng lệnh. Chỉ cần chat theo cách tự nhiên.
+
+Copilot sẽ:
+
+1. hiểu bạn đang muốn tạo yêu cầu, tra cứu hay báo đã rút xong;
+2. hỏi thông tin còn thiếu ở mức tối thiểu;
+3. tóm tắt để bạn kiểm tra;
+4. chỉ tạo yêu cầu sau khi bạn xác nhận;
+5. thông báo bước tiếp theo theo trạng thái thực tế.
+
+<Info>
+  Copilot không tự duyệt yêu cầu, không tự mở quyền rút tiền và không thực hiện giao dịch tài chính.
+</Info>
+
+## Trạng thái bạn sẽ thấy
+
+| Mã hệ thống | Hiển thị cho bạn | Ý nghĩa | Bạn cần làm gì |
+| --- | --- | --- | --- |
+| `wait_for_admin` | **Đang chờ Admin xử lý** | Yêu cầu đã được gửi | Chờ cập nhật; có thể hỏi trạng thái bất cứ lúc nào |
+| `reject` | **Yêu cầu bị từ chối** | Admin không chấp nhận yêu cầu | Xem lý do; yêu cầu Copilot hướng dẫn kênh hỗ trợ nếu cần |
+| `accept` | **Yêu cầu đã được chấp nhận** | Admin đã duyệt yêu cầu | Chờ bước xử lý quyền để có thể rút tiền |
+| `admin_remove` | **Bạn có thể rút tiền** | Admin đã xử lý quyền cần thiết | Mở app Tài Xế Aha → Ví → Rút tiền |
+| `admin_back` | **Đang trả lại quyền admin** | Bạn đã báo rút xong | Chờ Admin xử lý; không cần gửi lại nhiều lần |
+| `done` | **Quy trình hoàn tất** | Quyền admin đã được khôi phục | Không cần thao tác thêm |
+
+## Copy và dùng ngay
+
+### Tạo yêu cầu
+
+```text
+Tôi muốn rút tiền AhaRace tuần này.
+```
+
+### Kiểm tra tiến độ
+
+```text
+Yêu cầu rút tiền của tôi đang ở bước nào?
+```
+
+### Sau khi được mở quyền
+
+```text
+Tôi đã nhận được thông báo có thể rút tiền. Tôi cần thực hiện những bước nào trên app?
+```
+
+### Sau khi rút xong
+
+```text
+Tôi đã rút tiền xong. Hãy tạo yêu cầu trả lại quyền admin cho tôi.
+```
+
+### Khi bị từ chối hoặc chờ lâu
+
+```text
+Yêu cầu rút tiền của tôi bị từ chối / đang chờ lâu. Hãy kiểm tra trạng thái và hướng dẫn tôi cách liên hệ đúng owner.
+```
+
+## Copilot sẽ hỏi gì trước khi tạo yêu cầu
+
+```text
+Tôi sẽ tạo yêu cầu rút tiền với thông tin sau:
+- Tài khoản / Driver ID: [được che bớt nếu cần]
+- Họ tên: [tên]
+- Phòng ban: [phòng ban]
+
+Bạn xác nhận gửi yêu cầu này chứ?
+```
+
+Chỉ khi bạn trả lời rõ ràng như **“Xác nhận”**, **“Đồng ý”** hoặc **“Gửi yêu cầu”**, Copilot mới thực hiện action.
+
+## Không gửi các thông tin này vào chat
+
+- OTP;
+- mật khẩu;
+- số thẻ, số tài khoản ngân hàng;
+- token, secret hoặc ảnh chụp thông tin bảo mật;
+- thông tin cá nhân của người khác khi bạn không có quyền xử lý.

@@ -31,7 +31,47 @@
           "icon": "newspaper"
         }
       ]
-    }
+    },
+    "groups": [
+      {
+        "group": "Tổng quan",
+        "icon": "compass",
+        "pages": []
+      },
+      {
+        "group": "End User Guide",
+        "icon": "user",
+        "pages": [
+          "end-user/quickstart",
+          "end-user/program-qa",
+          "end-user/withdrawal",
+          "end-user/results",
+          "end-user/insight",
+          "end-user/safety"
+        ]
+      },
+      {
+        "group": "Developer / BA Guide",
+        "icon": "code",
+        "pages": [
+          "developer/scale-pattern",
+          "developer/reference-architecture",
+          "developer/skill-pack",
+          "developer/knowledge-tools",
+          "developer/withdrawal-state-machine",
+          "developer/governance"
+        ]
+      },
+      {
+        "group": "Phụ lục",
+        "icon": "book",
+        "pages": [
+          "appendix/templates",
+          "appendix/glossary",
+          "appendix/sources"
+        ]
+      }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",

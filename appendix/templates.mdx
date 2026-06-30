@@ -1,0 +1,68 @@
+---
+title: "Copy templates"
+description: "Template tạo Skill Pack, review policy và evaluation set"
+---
+
+## Tạo Skill Pack mới
+
+```text
+Tôi muốn tạo một Skill Pack cho [tên team].
+
+Business problem:
+[Điền vấn đề thực tế và tác động]
+
+Primary users:
+[Điền nhóm người dùng]
+
+Top 5 câu hỏi / case lặp lại:
+1. ...
+2. ...
+
+Policy / SOP / nguồn dữ liệu:
+- ...
+
+Action Agent được phép hỗ trợ:
+- ...
+
+Action bắt buộc phải có owner duyệt:
+- ...
+
+KPI cần đo sau khi release:
+- ...
+```
+
+## Prompt review policy source
+
+```text
+Hãy review tài liệu policy này để chuẩn bị đưa vào Knowledge Base.
+
+Trả về theo bảng gồm:
+- Policy / rule
+- Ai áp dụng
+- Điều kiện / ngoại lệ
+- Owner
+- Effective date
+- Câu hỏi người dùng có thể hỏi
+- Action Agent được phép hỗ trợ
+- Nội dung cần handoff
+
+Không suy diễn nếu tài liệu không nêu rõ.
+
+[Dán tài liệu hoặc link nội bộ tại đây]
+```
+
+## Prompt viết test cases cho Skill Pack
+
+```text
+Dựa trên Skill Pack dưới đây, tạo evaluation set gồm:
+- 10 câu hỏi policy
+- 5 case action hợp lệ
+- 5 case thiếu thông tin
+- 5 case user không có quyền
+- 5 case cần handoff
+- Expected answer hoặc expected system behavior
+
+Không thêm policy hoặc hành động không được nêu trong input.
+
+[Dán manifest / workflow / guardrails tại đây]
+```

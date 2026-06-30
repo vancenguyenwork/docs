@@ -1,0 +1,24 @@
+---
+title: "Pattern scale cho Central Ops"
+description: "Core Copilot và Skill Pack — mô hình scale Policy-to-Action"
+---
+
+## Giải pháp nên scale
+
+Không xây một chatbot riêng cho từng phòng ban.
+
+Nên xây một **Core Copilot** dùng chung và đóng gói nghiệp vụ riêng của mỗi team thành **Skill Pack**. Core Copilot giữ năng lực chung; mỗi team chỉ thêm policy, workflow, tool, guardrail và evaluation riêng.
+
+## Core Copilot làm gì, Skill Pack làm gì
+
+| Thành phần | Trách nhiệm | Ví dụ AhaRace |
+| --- | --- | --- |
+| **Core Copilot** | Hiểu intent, quản lý context, retrieval, tool orchestration, handoff, audit | Route câu “Tôi muốn rút tiền” đến Withdrawal flow |
+| **Skill Pack** | Chứa policy, workflow, tool mapping, guardrail và evaluation của domain | Rule AhaRace, Insight rubric, flow rút tiền |
+| **Workflow Engine** | Lưu state, approval và transition của case | `wait_for_admin → done` |
+| **MCP Tool Gateway** | Chuẩn hóa việc gọi API / DB / internal services | `create_withdraw_request`, `get_withdraw_status` |
+| **Human Owner** | Duyệt, từ chối và xử lý các bước nhạy cảm | Admin / QM / Ops |
+
+<Tip>
+  Cách nói ngắn gọn với stakeholder: **Whale Rail không tạo bot theo phòng ban. Whale Rail tạo đường ray chung để từng phòng ban triển khai AI đúng ngữ cảnh, đúng quyền và đúng quy trình.**
+</Tip>
