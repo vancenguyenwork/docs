@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 110" fill="none" aria-label="Whale Rail">
+  <g transform="translate(4 6)">
+    <path d="M40 8 C26 16 18 30 24 48 C28 58 38 62 46 56 L52 50 L52 4 C48 2 44 4 40 8 Z" fill="#F1F5F9"/>
+    <path d="M64 8 C78 16 86 30 80 48 C76 58 66 62 58 56 L52 50 L52 4 C56 2 60 4 64 8 Z" fill="#F1F5F9"/>
+    <path d="M22 100 L48 50 L54 52 L36 102 Z" fill="#F1F5F9"/>
+    <path d="M82 100 L56 50 L50 52 L68 102 Z" fill="#5EEAD4"/>
+    <rect x="40" y="72" width="24" height="3" rx="1.5" fill="#5EEAD4"/>
+    <rect x="38" y="82" width="28" height="3" rx="1.5" fill="#F1F5F9"/>
+    <rect x="36" y="92" width="32" height="3" rx="1.5" fill="#5EEAD4"/>
+  </g>
+  <g font-family="Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="76">
+    <text x="115" y="80" fill="#F1F5F9">Whale</text>
+    <text x="310" y="80" fill="#5EEAD4">Rail</text>
+  </g>
+</svg>

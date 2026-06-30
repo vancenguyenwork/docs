@@ -9,7 +9,7 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
+    "groups": [
       {
         "group": "Tổng quan",
         "icon": "compass",
@@ -48,8 +48,6 @@
           "appendix/sources"
         ]
       },
-      "logo/light.svg",
-      "logo/dark.svg",
       {
         "group": "Getting Started",
         "pages": [
@@ -60,8 +58,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/whale-rail.png",
-    "dark": "/logo/whale-rail.png"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": [],
