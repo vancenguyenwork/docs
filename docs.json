@@ -20,6 +20,7 @@
         "icon": "user",
         "pages": [
           "end-user/quickstart",
+          "end-user/video-demo",
           "end-user/program-qa",
           "end-user/withdrawal",
           "end-user/results",
