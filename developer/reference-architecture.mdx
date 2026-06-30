@@ -3,7 +3,232 @@ title: "Kiến trúc tham chiếu"
 description: "Sáu lớp triển khai và luồng Information / Action"
 ---
 
-## Sáu lớp triển khai
+## Sơ đồ kiến trúc tổng thể
+
+Sơ đồ dưới đây mô tả đầy đủ chín lớp của AhaOps Copilot, từ kênh sử dụng đến governance, kèm Builder Plane dành cho BA / Developer và Value Loop đo hiệu quả.
+
+```mermaid
+flowchart TB
+    %% =========================================================
+    %% WHALE RAIL / AHAOPS COPILOT - REFERENCE ARCHITECTURE
+    %% =========================================================
+    subgraph CH["1. KÊNH SỬ DỤNG · CHANNELS"]
+        direction LR
+        C1["Claude"]
+        C2["ChatGPT"]
+        C3["Web Portal / Internal Chat"]
+        C4["Other Clients<br/>Telegram · Slack · Future"]
+    end
+    subgraph ACCESS["2. ACCESS & CONTEXT LAYER"]
+        direction LR
+        A1["SSO / Identity"]
+        A2["RBAC / Permission"]
+        A3["User Profile & Session Context"]
+        A4["Audit Identity"]
+    end
+    subgraph CORE["3. CORE COPILOT ORCHESTRATION"]
+        direction LR
+        O1["Intent Router"]
+        O2["Context Builder"]
+        O3["Policy-to-Action Orchestrator"]
+        O4["Response Composer"]
+        O5["Fallback & Escalation"]
+
+        O1 --> O2 --> O3 --> O4 --> O5
+    end
+    subgraph SKILL["4. DOMAIN SKILL PACK ROUTER"]
+        direction TB
+        subgraph AR["AhaRace Pack"]
+            AR1["Program Q&A"]
+            AR2["Withdrawal Flow"]
+            AR3["Result Lookup"]
+            AR4["Insight Coach"]
+        end
+        subgraph PA["Payment & Analytics Pack"]
+            PA1["Payment Lookup"]
+            PA2["Discrepancy Case"]
+            PA3["Policy Q&A"]
+        end
+        subgraph QM["Quality Management Pack"]
+            QM1["Rule Review"]
+            QM2["Evidence Checklist"]
+            QM3["Case Handoff"]
+        end
+        subgraph OM["Operation Management Pack"]
+            OM1["Daily Ops Q&A"]
+            OM2["SLA / KPI Check"]
+            OM3["Incident Assist"]
+        end
+        subgraph WH["Warehouse Pack"]
+            WH1["Inventory Lookup"]
+            WH2["Inbound / Outbound"]
+            WH3["Stock Audit"]
+        end
+        subgraph CS["Customer Service Pack"]
+            CS1["Customer Lookup"]
+            CS2["Ticket Resolution"]
+            CS3["Escalation Guide"]
+        end
+    end
+    subgraph KNOWLEDGE["5. KNOWLEDGE & CONTEXT LAYER"]
+        direction LR
+        K1["Policy / SOP / FAQ"]
+        K2["Guideline / Playbook"]
+        K3["Versioned Documents"]
+        K4["Vector Search / RAG"]
+        K5["Structured Reference Data"]
+        K6["Supabase / Document Store"]
+    end
+    subgraph WORKFLOW["6. WORKFLOW & CASE LAYER"]
+        direction LR
+        W1["Case Engine"]
+        W2["State Machine"]
+        W3["Approval Flow"]
+        W4["Task / Handoff Queue"]
+        W1 --> W2 --> W3 --> W4
+    end
+    subgraph MCP["7. MCP TOOL GATEWAY"]
+        direction LR
+        M1["Tool Registry"]
+        M2["Tool Contract / Schema"]
+        M3["Authorization Check"]
+        M4["Execution / Retry / Idempotency"]
+        M1 --> M2 --> M3 --> M4
+    end
+    subgraph SYSTEMS["8. OPERATIONAL SYSTEMS · SOURCE OF TRUTH"]
+        direction LR
+        S1["Program Data"]
+        S2["Withdrawal System"]
+        S3["Admin / QM System"]
+        S4["Internal APIs"]
+        S5["Database / Sheets / Services"]
+    end
+    subgraph GOVERNANCE["9. GOVERNANCE · OBSERVABILITY · ANALYTICS"]
+        direction LR
+        G1["Audit Log"]
+        G2["Monitoring"]
+        G3["Tool Success Rate"]
+        G4["Latency"]
+        G5["Handoff Rate"]
+        G6["User Feedback"]
+        G7["Evaluation Set"]
+    end
+    subgraph BUILDER["BUILDER / CONTROL PLANE<br/>Dành cho BA & Developer"]
+        direction TB
+        B1["Skill Pack Template"]
+        B2["Intent Configuration"]
+        B3["Knowledge Ingestion"]
+        B4["Prompt / Guardrail Configuration"]
+        B5["Evaluation Set"]
+        B6["Release Checklist"]
+    end
+    %% =========================================================
+    %% MAIN FLOW
+    %% =========================================================
+    C1 --> A1
+    C2 --> A1
+    C3 --> A1
+    C4 --> A1
+    A1 --> A2 --> A3 --> A4
+    A4 --> O1
+    O3 <--> AR
+    O3 <--> PA
+    O3 <--> QM
+    O3 <--> OM
+    O3 <--> WH
+    O3 <--> CS
+    O3 --> KNOWLEDGE
+    O3 --> WORKFLOW
+    O3 --> MCP
+    KNOWLEDGE --> O3
+    WORKFLOW --> O3
+    MCP --> SYSTEMS
+    SYSTEMS --> MCP
+    WORKFLOW --> MCP
+    MCP --> WORKFLOW
+    CORE --> GOVERNANCE
+    WORKFLOW --> GOVERNANCE
+    MCP --> GOVERNANCE
+    SYSTEMS --> GOVERNANCE
+    BUILDER -. "Cấu hình / phát hành" .-> SKILL
+    BUILDER -. "Quản lý nguồn tri thức" .-> KNOWLEDGE
+    BUILDER -. "Thiết lập guardrail" .-> CORE
+    BUILDER -. "Kiểm thử trước release" .-> GOVERNANCE
+    %% =========================================================
+    %% VALUE LOOP
+    %% =========================================================
+    subgraph VALUE["VALUE LOOP"]
+        direction LR
+        V1["1. Ask<br/>Người dùng đặt câu hỏi hoặc yêu cầu"]
+        V2["2. Understand<br/>Hiểu intent, context, policy"]
+        V3["3. Act<br/>Gọi tool hoặc workflow phù hợp"]
+        V4["4. Resolve<br/>Owner xử lý và cập nhật trạng thái"]
+        V5["5. Learn<br/>Đo hiệu quả, tìm gap, cải tiến"]
+        V1 --> V2 --> V3 --> V4 --> V5
+    end
+    GOVERNANCE --> VALUE
+    %% =========================================================
+    %% STYLES
+    %% =========================================================
+    classDef channel fill:#F8FAFC,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef access fill:#EFF6FF,stroke:#3B82F6,stroke-width:1.5px,color:#0F172A;
+    classDef core fill:#EFF6FF,stroke:#1D4ED8,stroke-width:2px,color:#0F172A;
+    classDef skill fill:#ECFDF5,stroke:#0F766E,stroke-width:1.5px,color:#0F172A;
+    classDef knowledge fill:#F0FDFA,stroke:#0F766E,stroke-width:1.5px,color:#0F172A;
+    classDef workflow fill:#EEF2FF,stroke:#4F46E5,stroke-width:1.5px,color:#0F172A;
+    classDef mcp fill:#F5F3FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef system fill:#F8FAFC,stroke:#475569,stroke-width:1.5px,color:#0F172A;
+    classDef governance fill:#EFF6FF,stroke:#0369A1,stroke-width:1.5px,color:#0F172A;
+    classDef builder fill:#FFF7ED,stroke:#EA580C,stroke-width:1.5px,color:#0F172A;
+    classDef value fill:#ECFEFF,stroke:#0891B2,stroke-width:1.5px,color:#0F172A;
+    class C1,C2,C3,C4 channel;
+    class A1,A2,A3,A4 access;
+    class O1,O2,O3,O4,O5 core;
+    class AR1,AR2,AR3,AR4,PA1,PA2,PA3,QM1,QM2,QM3,OM1,OM2,OM3,WH1,WH2,WH3,CS1,CS2,CS3 skill;
+    class K1,K2,K3,K4,K5,K6 knowledge;
+    class W1,W2,W3,W4 workflow;
+    class M1,M2,M3,M4 mcp;
+    class S1,S2,S3,S4,S5 system;
+    class G1,G2,G3,G4,G5,G6,G7 governance;
+    class B1,B2,B3,B4,B5,B6 builder;
+    class V1,V2,V3,V4,V5 value;
+```
+
+## Chín lớp kiến trúc
+
+| # | Lớp | Mục đích | Thành phần tiêu biểu |
+| --- | --- | --- | --- |
+| 1 | **Channels** | Nơi người dùng tương tác với Copilot | Claude, ChatGPT, Web Portal, Telegram, Slack |
+| 2 | **Access & Context** | Xác thực, phân quyền và xây dựng context phiên | SSO, RBAC, user profile, audit identity |
+| 3 | **Core Copilot Orchestration** | Hiểu intent, build context, điều phối policy-to-action | Intent Router, Context Builder, Orchestrator, Response Composer, Fallback |
+| 4 | **Domain Skill Pack Router** | Định tuyến vào Skill Pack tương ứng | AhaRace, Payment & Analytics, QM, Operation, Warehouse, CS |
+| 5 | **Knowledge & Context** | Lưu policy, SOP, FAQ có version và RAG | Versioned Docs, Vector Search, Supabase / Document Store |
+| 6 | **Workflow & Case** | Quản lý trạng thái case, approval, handoff | Case Engine, State Machine, Approval Flow, Task Queue |
+| 7 | **MCP Tool Gateway** | Chuẩn hóa gọi tool, kiểm tra quyền và idempotency | Tool Registry, Contract Schema, Authorization, Execution |
+| 8 | **Operational Systems** | Source of truth cho dữ liệu nghiệp vụ | Program Data, Withdrawal, Admin/QM, Internal APIs, DB/Sheets |
+| 9 | **Governance & Observability** | Đo, audit và đảm bảo chất lượng | Audit Log, Monitoring, Tool Success, Latency, Handoff Rate, Feedback, Eval Set |
+
+## Builder / Control Plane
+
+Lớp dành cho BA và Developer để cấu hình, phát hành và kiểm thử Skill Pack mà không cần đụng vào Core Copilot.
+
+| Thành phần | Trách nhiệm |
+| --- | --- |
+| **Skill Pack Template** | Khung chuẩn để clone khi tạo pack mới |
+| **Intent Configuration** | Định nghĩa intent, ví dụ câu hỏi và routing rule |
+| **Knowledge Ingestion** | Nạp policy, SOP, FAQ vào Knowledge Base có version |
+| **Prompt / Guardrail Configuration** | Cách phản hồi, điều cấm, PII, authority |
+| **Evaluation Set** | Bộ test trước UAT và trước release |
+| **Release Checklist** | Cổng kiểm soát trước khi go-live |
+
+## Value Loop
+
+Vòng lặp đo hiệu quả khép kín từ câu hỏi của người dùng đến cải tiến hệ thống.
+
+<Steps>
+</Steps>
+
+## Sáu lớp triển khai (rút gọn)
 
 | Lớp | Mục đích | Thành phần tiêu biểu |
 | --- | --- | --- |
