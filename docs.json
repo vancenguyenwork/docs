@@ -11,15 +11,6 @@
   "navigation": {
     "pages": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "groups": [
-      {
         "group": "Tổng quan",
         "icon": "compass",
         "pages": []
@@ -55,6 +46,15 @@
           "appendix/templates",
           "appendix/glossary",
           "appendix/sources"
+        ]
+      },
+      "logo/light.svg",
+      "logo/dark.svg",
+      {
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "quickstart"
         ]
       }
     ]
