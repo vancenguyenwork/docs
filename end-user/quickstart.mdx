@@ -5,41 +5,99 @@ description: "Kết nối AhaOps Copilot qua Claude hoặc ChatGPT"
 
 ## Bạn cần gì
 
-- Tài khoản Claude hoặc ChatGPT trong workspace công ty.
-- Quyền sử dụng connector **AhaOps Copilot** hoặc **Whale Rail – AhaRace**.
+- Tài khoản Claude hoặc ChatGPT (hoặc client hỗ trợ MCP).
+- **Email `@ahamove.com`** để xác thực kết nối.
 - Thông tin định danh nội bộ khi bạn cần tra cứu dữ liệu cá nhân hoặc tạo yêu cầu.
 
 <Tip>
   Không cần nhớ lệnh. Hãy chat như đang trao đổi với một người hỗ trợ vận hành.
 </Tip>
 
-## Kết nối qua Claude hoặc ChatGPT
+## Kết nối qua MCP
 
-<Steps>
-  <Step title="Mở Claude hoặc ChatGPT">
-    Đăng nhập bằng tài khoản công ty.
-  </Step>
-  <Step title="Chọn connector AhaOps Copilot">
-    Chọn connector / app **AhaOps Copilot** đã được workspace công bố.
-  </Step>
-  <Step title="Xác thực">
-    Hoàn tất xác thực nếu hệ thống yêu cầu.
-  </Step>
-  <Step title="Bắt đầu chat">
-    Chat bằng ngôn ngữ tự nhiên.
-  </Step>
-</Steps>
+Bạn có thể kết nối AhaOps Copilot bằng **MCP (Model Context Protocol)** theo 2 cách. **Khuyến nghị dùng Cách 1** vì nhanh nhất và không cần chỉnh file cấu hình.
+
+<Note>
+  Mọi kết nối đều yêu cầu xác thực bằng **email `@ahamove.com`** của bạn. Tài khoản ngoài domain sẽ không được cấp quyền.
+</Note>
+
+<Tabs>
+  <Tab title="Cách 1 — Connector (khuyến nghị)">
+    Phù hợp cho **end user** dùng Claude / ChatGPT trực tiếp, không cần thao tác kỹ thuật.
+
+    <Steps>
+      <Step title="Mở Claude hoặc ChatGPT">
+        Đăng nhập bằng tài khoản công ty.
+      </Step>
+      <Step title="Thêm connector mới">
+        Vào **Settings → Connectors** (Claude) hoặc **Settings → Connectors / Apps** (ChatGPT) → **Add custom connector**.
+      </Step>
+      <Step title="Nhập URL connector">
+        Dán URL sau vào ô **Server URL**:
+
+        ```text
+        https://aharace-mcp-production.up.railway.app
+        ```
+      </Step>
+      <Step title="Xác thực bằng email @ahamove">
+        Hệ thống sẽ mở cửa sổ đăng nhập. Dùng email `@ahamove.com` của bạn để xác thực. Không dùng email cá nhân.
+      </Step>
+      <Step title="Bắt đầu chat">
+        Sau khi xác thực thành công, connector **AhaRace MCP** sẽ xuất hiện trong danh sách app. Mở hội thoại mới và chat bằng ngôn ngữ tự nhiên.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Cách 2 — MCP server config (developer)">
+    Phù hợp cho **developer / advanced user** dùng Claude Desktop hoặc client MCP tự host.
+
+    <Steps>
+      <Step title="Mở file cấu hình MCP">
+        - **Claude Desktop (macOS)**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+        - **Claude Desktop (Windows)**: `%APPDATA%\Claude\claude_desktop_config.json`
+      </Step>
+      <Step title="Thêm cấu hình aharace-mcp">
+        ```json claude_desktop_config.json
+        {
+          "mcpServers": {
+            "aharace-mcp": {
+              "url": "https://aharace-mcp-production.up.railway.app/"
+            }
+          }
+        }
+        ```
+
+        Nếu file đã có `mcpServers` khác, chỉ cần thêm key `"aharace-mcp"` vào object hiện có.
+      </Step>
+      <Step title="Khởi động lại client">
+        Restart Claude Desktop (hoặc MCP client của bạn) để load cấu hình mới.
+      </Step>
+      <Step title="Xác thực bằng email @ahamove">
+        Lần đầu gọi tool, client sẽ mở trình duyệt yêu cầu đăng nhập. Dùng email `@ahamove.com` để xác thực.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
 <Warning>
-  Không tự nhập endpoint, token, secret hoặc thông tin xác thực. Chỉ dùng kết nối do công ty phát hành và quản lý.
+  Không tự nhập endpoint khác, không chia sẻ token / session của bạn cho người khác. Chỉ dùng URL chính thức `https://aharace-mcp-production.up.railway.app`.
 </Warning>
 
 ## Checklist kết nối thành công
 
-- Bạn thấy AhaOps Copilot trong danh sách app / connector được cấp quyền.
+- Bạn đã xác thực bằng email `@ahamove.com`.
+- Bạn thấy **AhaRace MCP** (hoặc `aharace-mcp`) trong danh sách connector / app.
 - Bạn có thể bắt đầu hội thoại mới với Copilot.
-- Copilot có thể trả lời câu hỏi tổng quan về AhaRace.
+- Copilot trả lời được câu hỏi tổng quan về AhaRace.
 - Copilot chỉ yêu cầu xác nhận khi chuẩn bị tạo action.
+
+## Khi kết nối lỗi
+
+| Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
+| --- | --- | --- |
+| Không mở được cửa sổ xác thực | Trình duyệt chặn popup | Cho phép popup từ Claude / ChatGPT rồi thử lại |
+| Báo "unauthorized" sau khi đăng nhập | Dùng email cá nhân, không phải `@ahamove.com` | Đăng xuất, đăng nhập lại bằng email công ty |
+| Connector không xuất hiện | Cache client cũ | Restart Claude / ChatGPT, kiểm tra lại URL |
+| Tool gọi bị từ chối | Tài khoản chưa được cấp quyền | Liên hệ Ops qua nút **Liên hệ Ops** ở góc phải |
 
 ## Chọn việc bạn muốn làm
 
